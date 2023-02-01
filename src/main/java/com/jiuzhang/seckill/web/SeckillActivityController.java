@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 @Controller
 public class SeckillActivityController {
@@ -23,7 +23,6 @@ public class SeckillActivityController {
     }
 
     // @responsebody 关键字表示仅仅返回字符串，不加则返回模板页面
-    @ResponseBody
     @RequestMapping("/addSeckillActivityAction")
     public String addSeckillActivityAction(
             @RequestParam("name") String name,
@@ -32,7 +31,8 @@ public class SeckillActivityController {
             @RequestParam("oldPrice") BigDecimal oldPrice,
             @RequestParam("seckillNumber") long seckillNumber,
             @RequestParam("startTime") String startTime,
-            @RequestParam("endTime") String endTime
+            @RequestParam("endTime") String endTime,
+            HashMap<String, Object> resultMap
     ) throws ParseException {
         startTime = startTime.substring(0, 10) + startTime.substring(11);
         endTime = endTime.substring(0, 10) + endTime.substring(11);
@@ -49,6 +49,7 @@ public class SeckillActivityController {
         seckillActivity.setStartTime(format.parse(startTime));
         seckillActivity.setEndTime(format.parse(endTime));
         seckillActivityDao.inertSeckillActivity(seckillActivity);
-        return seckillActivity.toString();
+        resultMap.put("seckillActivity", seckillActivity);
+        return "add_success";
     }
 }

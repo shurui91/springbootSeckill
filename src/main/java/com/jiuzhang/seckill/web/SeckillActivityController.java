@@ -13,22 +13,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SeckillActivityController {
+
     @Autowired
     private SeckillActivityDao seckillActivityDao;
+
     @Autowired
     private SeckillCommodityDao seckillCommodityDao;
 
-    @RequestMapping("/addSeckillActivity")
-    public String addSeckillActivity() {
-        return "add_activity";
+    @RequestMapping("/seckills")
+    public String activityList(Map<String, Object> resultMap) {
+        List<SeckillActivity> seckillActivities = seckillActivityDao.querySeckillActivitysByStatus(1);
+        resultMap.put("seckillActivities", seckillActivities);
+        return "seckill_activity";
     }
 
-    // @responsebody 关键字表示仅仅返回字符串，不加则返回模板页面
+    /**
+     * 秒杀商品详情
+     *
+     * @param resultMap
+     * @param seckillActivityId
+     * @return
+     */
+    @RequestMapping("/item/{seckillActivityId}")
+    public String itemPage(Map<String, Object> resultMap, @PathVariable long seckillActivityId) {
+        SeckillActivity seckillActivity = seckillActivityDao.querySeckillActivityById(seckillActivityId);
+        SeckillCommodity seckillCommodity = seckillCommodityDao.querySeckillCommodityById(seckillActivity.getCommodityId());
+
+        resultMap.put("seckillActivity", seckillActivity);
+        resultMap.put("seckillCommodity", seckillCommodity);
+        resultMap.put("seckillPrice", seckillActivity.getSeckillPrice());
+        resultMap.put("oldPrice", seckillActivity.getOldPrice());
+        resultMap.put("commodityId", seckillActivity.getCommodityId());
+        resultMap.put("commodityName", seckillCommodity.getCommodityName());
+        resultMap.put("commodityDesc", seckillCommodity.getCommodityDesc());
+        return "seckill_item";
+    }
+
+    //    @ResponseBody
     @RequestMapping("/addSeckillActivityAction")
     public String addSeckillActivityAction(
             @RequestParam("name") String name,
@@ -38,8 +64,7 @@ public class SeckillActivityController {
             @RequestParam("seckillNumber") long seckillNumber,
             @RequestParam("startTime") String startTime,
             @RequestParam("endTime") String endTime,
-            HashMap<String, Object> resultMap
-    ) throws ParseException {
+            Map<String, Object> resultMap) throws ParseException {
         startTime = startTime.substring(0, 10) + startTime.substring(11);
         endTime = endTime.substring(0, 10) + endTime.substring(11);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-ddhh:mm");
@@ -59,38 +84,8 @@ public class SeckillActivityController {
         return "add_success";
     }
 
-    /**
-     * 查询秒杀活动的列表
-     *
-     * @param resultMap
-     * @return
-     */
-    @RequestMapping("/seckills")
-    public String activityList(HashMap<String, Object> resultMap) {
-        List<SeckillActivity> seckillActivities =
-                seckillActivityDao.querySeckillActivitysByStatus(1);
-        resultMap.put("seckillActivities", seckillActivities);
-        return "seckill_activity";
-    }
-
-    /**
-     * 秒杀商品详情
-     *
-     * @param resultMap
-     * @param seckillActivityId
-     * @return
-     */
-    @RequestMapping("/item/{seckillActivityId}")
-    public String itemPage(HashMap<String, Object> resultMap, @PathVariable long seckillActivityId) {
-        SeckillActivity seckillActivity = seckillActivityDao.querySeckillActivityById(seckillActivityId);
-        SeckillCommodity seckillCommodity = seckillCommodityDao.querySeckillCommodityById(seckillActivity.getCommodityId());
-        resultMap.put("seckillActivity", seckillActivity);
-        resultMap.put("seckillCommodity", seckillCommodity);
-        resultMap.put("seckillPrice", seckillActivity.getSeckillPrice());
-        resultMap.put("oldPrice", seckillActivity.getOldPrice());
-        resultMap.put("commodityId", seckillActivity.getCommodityId());
-        resultMap.put("commodityName", seckillCommodity.getCommodityName());
-        resultMap.put("commodityDesc", seckillCommodity.getCommodityDesc());
-        return "seckill_item";
+    @RequestMapping("/addSeckillActivity")
+    public String addSeckillActivity() {
+        return "add_activity";
     }
 }

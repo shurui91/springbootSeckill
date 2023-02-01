@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
+import java.util.*;
 
 @Controller
 public class SeckillActivityController {
@@ -51,5 +51,14 @@ public class SeckillActivityController {
         seckillActivityDao.inertSeckillActivity(seckillActivity);
         resultMap.put("seckillActivity", seckillActivity);
         return "add_success";
+    }
+
+    // 展示已经加入的秒杀活动
+    @RequestMapping("/seckills")
+    public String activityList(HashMap<String, Object> resultMap) {
+        List<SeckillActivity> seckillActivities =
+                seckillActivityDao.querySeckillActivitysByStatus(1);
+        resultMap.put("seckillActivities", seckillActivities);
+        return "seckill_activity";
     }
 }

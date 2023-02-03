@@ -53,15 +53,25 @@
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-        <table schema="" tableName="seckill_activity" domainObjectName="SeckillActivity"  enableCountByExample="false" enableDeleteByExample="false"
+        <table schema="" tableName="seckill_activity" domainObjectName="SeckillActivity" enableCountByExample="false"
+               enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false">
         </table>
-        <table schema="" tableName="seckill_commodity" domainObjectName="SeckillCommodity"  enableCountByExample="false" enableDeleteByExample="false"
+        <table schema="" tableName="seckill_commodity" domainObjectName="SeckillCommodity" enableCountByExample="false"
+               enableDeleteByExample="false"
                enableSelectByExample="false" enableUpdateByExample="false" selectByExampleQueryId="false">
         </table>
         <!-- 有些表的字段需要指定java类型
          <table schema="" tableName="">
             <columnOverride column="" javaType="" />
         </table> -->
+        <table schema="" tableName="seckill_order" domainObjectName="Order"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false"
+               selectByExampleQueryId="false"/>
+        <table schema="" tableName="seckill_user" domainObjectName="User"
+               enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false"
+               selectByExampleQueryId="false"/>
     </context>
 </generatorConfiguration>

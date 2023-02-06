@@ -2,17 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jiuzhang.seckill.db.mappers.SeckillActivityMapper">
     <resultMap id="BaseResultMap" type="com.jiuzhang.seckill.db.po.SeckillActivity">
-        <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="name" jdbcType="VARCHAR" property="name" />
-        <result column="commodity_id" jdbcType="BIGINT" property="commodityId" />
-        <result column="old_price" jdbcType="DECIMAL" property="oldPrice" />
-        <result column="seckill_price" jdbcType="DECIMAL" property="seckillPrice" />
-        <result column="activity_status" jdbcType="INTEGER" property="activityStatus" />
-        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
-        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-        <result column="total_stock" jdbcType="BIGINT" property="totalStock" />
-        <result column="available_stock" jdbcType="INTEGER" property="availableStock" />
-        <result column="lock_stock" jdbcType="BIGINT" property="lockStock" />
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="commodity_id" jdbcType="BIGINT" property="commodityId"/>
+        <result column="old_price" jdbcType="DECIMAL" property="oldPrice"/>
+        <result column="seckill_price" jdbcType="DECIMAL" property="seckillPrice"/>
+        <result column="activity_status" jdbcType="INTEGER" property="activityStatus"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="total_stock" jdbcType="BIGINT" property="totalStock"/>
+        <result column="available_stock" jdbcType="INTEGER" property="availableStock"/>
+        <result column="lock_stock" jdbcType="BIGINT" property="lockStock"/>
     </resultMap>
     <sql id="Base_Column_List">
         id, name, commodity_id, old_price, seckill_price, activity_status, start_time, end_time,
@@ -20,7 +20,7 @@
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from seckill_activity
         where id = #{id,jdbcType=BIGINT}
     </select>
@@ -168,4 +168,12 @@
         from seckill_activity
         where activity_status = #{id,jdbcType=SMALLINT}
     </select>
+
+    <update id="lockStock" parameterType="java.lang.Long">
+        update seckill_activity
+        set available_stock = available_stock - 1,
+        lock_stock = lock_stock + 1
+        where id = #{id,jdbcType=BIGINT}
+        and available_stock > 0
+    </update>
 </mapper>

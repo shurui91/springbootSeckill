@@ -2,11 +2,13 @@ package com.jiuzhang.seckill.db.dao;
 
 import com.jiuzhang.seckill.db.mappers.SeckillActivityMapper;
 import com.jiuzhang.seckill.db.po.SeckillActivity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class SeckillActivityDaoImpl implements SeckillActivityDao {
 
@@ -31,5 +33,15 @@ public class SeckillActivityDaoImpl implements SeckillActivityDao {
     @Override
     public void updateSeckillActivity(SeckillActivity seckillActivity) {
         seckillActivityMapper.updateByPrimaryKey(seckillActivity);
+    }
+
+    @Override
+    public boolean lockStock(long activityId) {
+        int result = seckillActivityMapper.lockStock(activityId);
+        if (result < 1) {
+            log.error("锁定库存失败");
+            return false;
+        }
+        return true;
     }
 }

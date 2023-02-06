@@ -1,6 +1,7 @@
 package com.jiuzhang.seckill.services;
 
 import com.alibaba.fastjson.JSON;
+import com.jiuzhang.seckill.db.dao.OrderDao;
 import com.jiuzhang.seckill.db.dao.SeckillActivityDao;
 import com.jiuzhang.seckill.db.po.Order;
 import com.jiuzhang.seckill.db.po.SeckillActivity;
@@ -20,6 +21,9 @@ public class SeckillActivityService {
 
     @Autowired
     private RocketMQService rocketMQService;
+
+    @Autowired
+    private OrderDao orderDao;
 
     /**
      * datacenterId;  数据中心

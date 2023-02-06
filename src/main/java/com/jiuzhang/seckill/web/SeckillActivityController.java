@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
@@ -105,7 +104,7 @@ public class SeckillActivityController {
      * @param seckillActivityId
      * @return
      */
-    @ResponseBody
+    //    @ResponseBody
     @RequestMapping("/seckill/buy/{userId}/{seckillActivityId}")
     public ModelAndView seckillCommodity(@PathVariable long userId, @PathVariable long seckillActivityId) {
         boolean stockValidateResult = false;

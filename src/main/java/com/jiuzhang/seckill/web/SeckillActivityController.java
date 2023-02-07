@@ -1,5 +1,6 @@
 package com.jiuzhang.seckill.web;
 
+import com.jiuzhang.seckill.db.dao.OrderDao;
 import com.jiuzhang.seckill.db.dao.SeckillActivityDao;
 import com.jiuzhang.seckill.db.dao.SeckillCommodityDao;
 import com.jiuzhang.seckill.db.po.Order;
@@ -33,6 +34,9 @@ public class SeckillActivityController {
     @Autowired
     private SeckillActivityService seckillActivityService;
 
+    @Autowired
+    private OrderDao orderDao;
+
     @RequestMapping("/seckills")
     public String activityList(Map<String, Object> resultMap) {
         List<SeckillActivity> seckillActivities = seckillActivityDao.querySeckillActivitysByStatus(1);
@@ -62,7 +66,7 @@ public class SeckillActivityController {
         return "seckill_item";
     }
 
-    //    @ResponseBody
+    // @ResponseBody
     @RequestMapping("/addSeckillActivityAction")
     public String addSeckillActivityAction(
             @RequestParam("name") String name,
@@ -104,7 +108,7 @@ public class SeckillActivityController {
      * @param seckillActivityId
      * @return
      */
-    //    @ResponseBody
+    // @ResponseBody
     @RequestMapping("/seckill/buy/{userId}/{seckillActivityId}")
     public ModelAndView seckillCommodity(@PathVariable long userId, @PathVariable long seckillActivityId) {
         boolean stockValidateResult = false;
@@ -127,6 +131,28 @@ public class SeckillActivityController {
             modelAndView.addObject("resultInfo", "秒杀失败");
         }
         modelAndView.setViewName("seckill_result");
+        return modelAndView;
+    }
+
+    /**
+     * 订单查询
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("/seckill/orderQuery/{orderNo}")
+    public ModelAndView orderQuery(@PathVariable String orderNo) {
+        log.info("订单查询，订单号：" + orderNo);
+        Order order = orderDao.queryOrder(orderNo);
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (order != null) {
+            modelAndView.setViewName("order");
+            modelAndView.addObject("order", order);
+            SeckillActivity seckillActivity = seckillActivityDao.querySeckillActivityById(order.getSeckillActivityId());
+            modelAndView.addObject("seckillActivity", seckillActivity);
+        } else {
+            modelAndView.setViewName("order_wait");
+        }
         return modelAndView;
     }
 }

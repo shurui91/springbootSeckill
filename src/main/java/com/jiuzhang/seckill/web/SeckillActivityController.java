@@ -136,6 +136,7 @@ public class SeckillActivityController {
 
     /**
      * 订单查询
+     *
      * @param orderNo
      * @return
      */
@@ -154,5 +155,16 @@ public class SeckillActivityController {
             modelAndView.setViewName("order_wait");
         }
         return modelAndView;
+    }
+
+    /**
+     * 订单支付
+     *
+     * @return
+     */
+    @RequestMapping("/seckill/payOrder/{orderNo}")
+    public String payOrder(@PathVariable String orderNo) throws Exception {
+        seckillActivityService.payOrderProcess(orderNo);
+        return "redirect:/seckill/orderQuery/" + orderNo;
     }
 }

@@ -22,4 +22,6 @@ public interface SeckillActivityMapper {
     int lockStock(long activityId);
 
     int deductStock(Long seckillActivityId);
+
+    void revertStock(Long seckillActivityId);
 }

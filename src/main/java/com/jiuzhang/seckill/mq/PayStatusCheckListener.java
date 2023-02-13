@@ -41,7 +41,7 @@ public class PayStatusCheckListener implements RocketMQListener<MessageExt> {
         if (orderInfo.getOrderStatus() != 2) {
             //3.未完成支付关闭订单
             log.info("未完成支付关闭订单,订单号：" + orderInfo.getOrderNo());
-            orderInfo.setOrderStatus(99);;
+            orderInfo.setOrderStatus(99);
             orderDao.updateOrder(orderInfo);
             //4.恢复数据库库存
             seckillActivityDao.revertStock(order.getSeckillActivityId());

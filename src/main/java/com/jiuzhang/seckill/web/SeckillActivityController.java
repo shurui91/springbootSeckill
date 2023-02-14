@@ -1,5 +1,6 @@
 package com.jiuzhang.seckill.web;
 
+import com.alibaba.fastjson.JSON;
 import com.jiuzhang.seckill.db.dao.OrderDao;
 import com.jiuzhang.seckill.db.dao.SeckillActivityDao;
 import com.jiuzhang.seckill.db.dao.SeckillCommodityDao;
@@ -9,6 +10,7 @@ import com.jiuzhang.seckill.db.po.SeckillCommodity;
 import com.jiuzhang.seckill.services.SeckillActivityService;
 import com.jiuzhang.seckill.util.RedisService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,8 +60,24 @@ public class SeckillActivityController {
      */
     @RequestMapping("/item/{seckillActivityId}")
     public String itemPage(Map<String, Object> resultMap, @PathVariable long seckillActivityId) {
-        SeckillActivity seckillActivity = seckillActivityDao.querySeckillActivityById(seckillActivityId);
-        SeckillCommodity seckillCommodity = seckillCommodityDao.querySeckillCommodityById(seckillActivity.getCommodityId());
+        SeckillActivity seckillActivity;
+        SeckillCommodity seckillCommodity;
+
+        String seckillActivityInfo = redisService.getValue("seckillActivity:" + seckillActivityId);
+        if (StringUtils.isNotEmpty(seckillActivityInfo)) {
+            log.info("redis缓存数据:" + seckillActivityInfo);
+            seckillActivity = JSON.parseObject(seckillActivityInfo, SeckillActivity.class);
+        } else {
+            seckillActivity = seckillActivityDao.querySeckillActivityById(seckillActivityId);
+        }
+
+        String seckillCommodityInfo = redisService.getValue("seckillCommodity:" + seckillActivity.getCommodityId());
+        if (StringUtils.isNotEmpty(seckillCommodityInfo)) {
+            log.info("redis缓存数据:" + seckillCommodityInfo);
+            seckillCommodity = JSON.parseObject(seckillActivityInfo, SeckillCommodity.class);
+        } else {
+            seckillCommodity = seckillCommodityDao.querySeckillCommodityById(seckillActivity.getCommodityId());
+        }
 
         resultMap.put("seckillActivity", seckillActivity);
         resultMap.put("seckillCommodity", seckillCommodity);

@@ -46,19 +46,25 @@ public class TestController {
      * @PostConstruct 当前类的构造函数执行完之后执行
      */
     @PostConstruct
-    public void initFlowRules() {
+    public void seckillsFlow() {
         //1.创建存放限流规则的集合
         List<FlowRule> rules = new ArrayList<>();
         //2.创建限流规则
         FlowRule rule = new FlowRule();
         //定义资源，表示sentinel会对那个资源生效
-        rule.setResource("HelloResource");
+        rule.setResource("seckills");
         //定义限流规则类型,QPS类型
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         //定义QPS每秒通过的请求数
-        rule.setCount(2);
+        rule.setCount(1);
+
+        FlowRule rule2 = new FlowRule();
+        rule2.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        rule2.setCount(2);
+        rule2.setResource("HelloResource");
         //3.将限流规则放到集合中
         rules.add(rule);
+        rules.add(rule2);
         //4.加载限流规则
         FlowRuleManager.loadRules(rules);
     }
